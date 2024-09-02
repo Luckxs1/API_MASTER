@@ -1,6 +1,5 @@
 $(document).ready(function() {
     let currentRecordId = null;
-    let searchQuery = '';
 
     // Fetch and display records
     function loadRecords(query = '') {
@@ -10,14 +9,6 @@ $(document).ready(function() {
             success: function(data) {
                 let records = JSON.parse(data);
                 let html = '';
-
-                // Filter records based on the search query
-                records = records.filter(record => 
-                    record.name.toLowerCase().includes(query.toLowerCase()) ||
-                    record.email.toLowerCase().includes(query.toLowerCase()) ||
-                    record.age.toString().includes(query)
-                );
-
                 records.forEach(record => {
                     html += `<tr>
                                 <td>${record.id}</td>
@@ -35,11 +26,6 @@ $(document).ready(function() {
         });
     }
     loadRecords();
-     // Search records
-     $('#searchQuery').on('input', function() {
-       searchQuery = $(this).val();
-        loadRecords(searchQuery);
-    });
     
     // Open modal to create new record
     $('#createRecordBtn').on('click', function() {
@@ -72,7 +58,7 @@ $(document).ready(function() {
                 data: JSON.stringify(data),
                 success: function() {
                     $('#recordModal').modal('hide');
-                    loadRecords(searchQuery);
+                    loadRecords();
                 }
             });
         } else {
@@ -112,7 +98,7 @@ $(document).ready(function() {
                 type: 'DELETE',
                 success: function() {
                     $('#deleteModal').modal('hide');
-                    loadRecords(searchQuery);
+                    loadRecords();
 
                     // Show the toast notification
                     let deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
